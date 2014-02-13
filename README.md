@@ -2,6 +2,11 @@
 
 Simple abstraction layer over S3 for get/put.
 
+[![Build
+Status](https://travis-ci.org/BBC-News/alephant-cache.png)](https://travis-ci.org/BBC-News/alephant-cache)
+
+[![Gem Version](https://badge.fury.io/rb/alephant-cache.png)](http://badge.fury.io/rb/alephant-cache)
+
 ## Installation
 
 Add this line to your application's Gemfile:
