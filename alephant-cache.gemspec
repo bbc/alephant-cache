@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Alephant::Cache::VERSION
   spec.authors       = ["Robert Kenny"]
   spec.email         = ["kenoir@gmail.com"]
-  spec.summary       = %q{Simple abstraction layer over S3 for get/put.}
-  spec.homepage      = ""
+  spec.summary       = "Simple abstraction layer over S3 for get/put."
+  spec.homepage      = "https://github.com/BBC-News/alephant-cache"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
