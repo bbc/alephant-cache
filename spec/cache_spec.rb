@@ -22,6 +22,29 @@ describe Alephant::Cache do
     end
   end
 
+  describe "clear" do
+    let(:num_object_in_path) { 100 }
+    it "deletes all objects for a path" do
+      filtered_object_collection = double()
+      filtered_object_collection
+        .should_receive(:delete_all)
+
+      s3_object_collection = double()
+      s3_object_collection
+        .should_receive(:with_prefix)
+        .with(path)
+        .and_return(filtered_object_collection)
+
+      s3_bucket = double()
+      s3_bucket.should_receive(:objects).and_return(s3_object_collection)
+
+      AWS::S3.any_instance.stub(:buckets).and_return({ id => s3_bucket })
+
+      instance = subject.new(id, path)
+      instance.clear
+    end
+  end
+
   describe "put(id, data)" do
     it "sets bucket path/id content data" do
       s3_object_collection = double()

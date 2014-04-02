@@ -11,19 +11,23 @@ module Alephant
       @id = id
       @path = path
 
-      s3 = AWS::S3.new
-      @bucket = s3.buckets[id]
+      @bucket = AWS::S3.new.buckets[id]
       logger.info("Cache.initialize: end with id #{id} and path #{path}")
     end
 
+    def clear
+      bucket.objects.with_prefix(path).delete_all
+      logger.info("Cache.clear: #{path}")
+    end
+
     def put(id, data)
-      @bucket.objects["#{@path}/#{id}"].write(data)
-      logger.info("Cache.put: #{@path}/#{id}")
+      bucket.objects["#{path}/#{id}"].write(data)
+      logger.info("Cache.put: #{path}/#{id}")
     end
 
     def get(id)
-      logger.info("Cache.get: #{@path}/#{id}")
-      @bucket.objects["#{@path}/#{id}"].read
+      logger.info("Cache.get: #{path}/#{id}")
+      bucket.objects["#{path}/#{id}"].read
     end
   end
 end
