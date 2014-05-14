@@ -48,7 +48,7 @@ describe Alephant::Cache do
   describe "put(id, data)" do
     it "sets bucket path/id content data" do
       s3_object_collection = double()
-      s3_object_collection.should_receive(:write).with(:data)
+      s3_object_collection.should_receive(:write).with(:data,:metadata=>{})
 
       s3_bucket = double()
       s3_bucket.should_receive(:objects).and_return(
