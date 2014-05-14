@@ -20,8 +20,14 @@ module Alephant
       logger.info("Cache.clear: #{path}")
     end
 
-    def put(id, data)
-      bucket.objects["#{path}/#{id}"].write(data)
+    def put(id, data, meta = {})
+      bucket.objects["#{path}/#{id}"].write(
+        data,
+        {
+          :metadata => meta
+        }
+      )
+
       logger.info("Cache.put: #{path}/#{id}")
     end
 
