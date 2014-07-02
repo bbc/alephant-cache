@@ -20,11 +20,12 @@ module Alephant
       logger.info("Cache.clear: #{path}")
     end
 
-    def put(id, data, meta = {})
+    def put(id, data, content_type = 'text/plain', meta = {})
       bucket.objects["#{path}/#{id}"].write(
         data,
         {
-          :metadata => meta
+          :content_type => content_type,
+          :metadata     => meta
         }
       )
 
@@ -33,7 +34,13 @@ module Alephant
 
     def get(id)
       logger.info("Cache.get: #{path}/#{id}")
-      bucket.objects["#{path}/#{id}"].read
+      object = bucket.objects["#{path}/#{id}"]
+
+      {
+        :content      => object.read,
+        :content_type => object.content_type
+      }
     end
   end
 end
+

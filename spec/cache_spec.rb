@@ -48,7 +48,7 @@ describe Alephant::Cache do
   describe "put(id, data)" do
     it "sets bucket path/id content data" do
       s3_object_collection = double()
-      s3_object_collection.should_receive(:write).with(:data,:metadata=>{})
+      s3_object_collection.should_receive(:write).with(:data, { :content_type => 'foo/bar', :metadata=>{} })
 
       s3_bucket = double()
       s3_bucket.should_receive(:objects).and_return(
@@ -60,14 +60,15 @@ describe Alephant::Cache do
       AWS::S3.any_instance.stub(:buckets).and_return({ id => s3_bucket })
       instance = subject.new(id, path)
 
-      instance.put(id, data);
+      instance.put(id, data, 'foo/bar')
     end
   end
 
   describe "get(id)" do
     it "gets bucket path/id content data" do
       s3_object_collection = double()
-      s3_object_collection.should_receive(:read)
+      s3_object_collection.should_receive(:read).and_return("content")
+      s3_object_collection.should_receive(:content_type).and_return("foo/bar")
 
       s3_bucket = double()
       s3_bucket.should_receive(:objects).and_return(
@@ -79,7 +80,14 @@ describe Alephant::Cache do
       AWS::S3.any_instance.stub(:buckets).and_return({ id => s3_bucket })
 
       instance = subject.new(id, path)
-      instance.get(id);
+      object_hash = instance.get(id)
+
+      expected_hash = {
+        :content      => "content",
+        :content_type => "foo/bar"
+      }
+
+      expect(object_hash).to eq(expected_hash)
     end
   end
 end
