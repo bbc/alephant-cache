@@ -69,6 +69,7 @@ describe Alephant::Cache do
       s3_object_collection = double()
       s3_object_collection.should_receive(:read).and_return("content")
       s3_object_collection.should_receive(:content_type).and_return("foo/bar")
+      s3_object_collection.should_receive(:metadata).and_return({ :foo => :bar})
 
       s3_bucket = double()
       s3_bucket.should_receive(:objects).and_return(
@@ -84,7 +85,8 @@ describe Alephant::Cache do
 
       expected_hash = {
         :content      => "content",
-        :content_type => "foo/bar"
+        :content_type => "foo/bar",
+        :meta         => { :foo => :bar }
       }
 
       expect(object_hash).to eq(expected_hash)
