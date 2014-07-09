@@ -38,7 +38,8 @@ module Alephant
 
       {
         :content      => object.read,
-        :content_type => object.content_type
+        :content_type => object.content_type,
+        :meta         => object.metadata
       }
     end
   end
