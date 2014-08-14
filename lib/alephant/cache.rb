@@ -39,7 +39,7 @@ module Alephant
       {
         :content      => object.read,
         :content_type => object.content_type,
-        :meta         => object.metadata
+        :meta         => object.metadata.to_h
       }
     end
   end
