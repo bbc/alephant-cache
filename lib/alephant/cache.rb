@@ -29,10 +29,12 @@ module Alephant
         }
       )
 
+      logger.metric(:name => "CachePuts", :unit => "Count", :value => 1)
       logger.info("Cache.put: #{path}/#{id}")
     end
 
     def get(id)
+      logger.metric(:name => "CacheGets", :unit => "Count", :value => 1)
       logger.info("Cache.get: #{path}/#{id}")
       object = bucket.objects["#{path}/#{id}"]
 
