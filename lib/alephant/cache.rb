@@ -29,18 +29,12 @@ module Alephant
         }
       )
 
-      logger.metric(
-        "CachePuts",
-        metric_opts[:dimensions].merge(:function => "put")
-      )
+      logger.metric "CachePuts"
       logger.info("Cache.put: #{path}/#{id}")
     end
 
     def get(id)
-      logger.metric(
-        "CacheGets",
-        metric_opts[:dimensions].merge(:function => "get")
-      )
+      logger.metric "CacheGets"
       logger.info("Cache.get: #{path}/#{id}")
       object = bucket.objects["#{path}/#{id}"]
 
@@ -48,15 +42,6 @@ module Alephant
         :content      => object.read,
         :content_type => object.content_type,
         :meta         => object.metadata.to_h
-      }
-    end
-
-    def metric_opts
-      {
-        :dimensions => {
-          :module   => "Alephant",
-          :class    => "Cache"
-      }
       }
     end
   end
