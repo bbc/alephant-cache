@@ -6,8 +6,8 @@ require 'alephant/cache/version'
 Gem::Specification.new do |spec|
   spec.name          = "alephant-cache"
   spec.version       = Alephant::Cache::VERSION
-  spec.authors       = ["Robert Kenny"]
-  spec.email         = ["kenoir@gmail.com"]
+  spec.authors       = ["BBC News"]
+  spec.email         = ["FutureMediaNewsRubyGems@bbc.co.uk"]
   spec.summary       = "Simple abstraction layer over S3 for get/put."
   spec.homepage      = "https://github.com/BBC-News/alephant-cache"
   spec.license       = "MIT"
