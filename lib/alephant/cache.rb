@@ -10,14 +10,23 @@ module Alephant
     def initialize(id, path)
       @id = id
       @path = path
-
       @bucket = AWS::S3.new.buckets[id]
-      logger.info("Cache.initialize: end with id #{id} and path #{path}")
+
+      logger.info(
+        "event"  => "CacheInitialized",
+        "id"     => id,
+        "path"   => path,
+        "method" => "#{self.class}#initialize",
+      )
     end
 
     def clear
       bucket.objects.with_prefix(path).delete_all
-      logger.info("Cache.clear: #{path}")
+      logger.info(
+        "event"  => "CacheCleared",
+        "path"   => path,
+        "method" => "#{self.class}#clear"
+      )
     end
 
     def put(id, data, content_type = 'text/plain', meta = {})
@@ -30,20 +39,36 @@ module Alephant
       )
 
       logger.metric "CachePuts"
-      logger.info("Cache.put: #{path}/#{id}")
+      logger.info(
+        "event"  => "CacheObjectStored",
+        "path"   => path,
+        "id"     => id,
+        "method" => "#{self.class}#put"
+      )
     end
 
     def get(id)
+      object       = bucket.objects["#{path}/#{id}"]
+      content      = object.read
+      content_type = object.content_type,
+      meta_data    = object.metadata.to_h
+
       logger.metric "CacheGets"
-      logger.info("Cache.get: #{path}/#{id}")
-      object = bucket.objects["#{path}/#{id}"]
+      logger.info(
+        "event"       => "CacheObjectRetrieved",
+        "path"        => path,
+        "id"          => id,
+        "content"     => content,
+        "contentType" => content_type,
+        "metadata"    => meta_data,
+        "method"      => "#{self.class}#get"
+      )
 
       {
-        :content      => object.read,
-        :content_type => object.content_type,
-        :meta         => object.metadata.to_h
+        :content      => content,
+        :content_type => content_type,
+        :meta         => meta_data
       }
     end
   end
 end
-
