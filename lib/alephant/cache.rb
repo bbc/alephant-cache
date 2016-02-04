@@ -50,7 +50,7 @@ module Alephant
     def get(id)
       object       = bucket.objects["#{path}/#{id}"]
       content      = object.read
-      content_type = object.content_type,
+      content_type = object.content_type
       meta_data    = object.metadata.to_h
 
       logger.metric "CacheGets"
