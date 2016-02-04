@@ -26,19 +26,19 @@ describe Alephant::Cache do
     let(:num_object_in_path) { 100 }
     it "deletes all objects for a path" do
       filtered_object_collection = double()
-      filtered_object_collection
-        .should_receive(:delete_all)
+      expect(filtered_object_collection)
+        .to receive(:delete_all)
 
       s3_object_collection = double()
-      s3_object_collection
-        .should_receive(:with_prefix)
+      expect(s3_object_collection)
+        .to receive(:with_prefix)
         .with(path)
         .and_return(filtered_object_collection)
 
       s3_bucket = double()
-      s3_bucket.should_receive(:objects).and_return(s3_object_collection)
+      expect(s3_bucket).to receive(:objects).and_return(s3_object_collection)
 
-      AWS::S3.any_instance.stub(:buckets).and_return({ id => s3_bucket })
+      expect_any_instance_of(AWS::S3).to receive(:buckets).and_return({ id => s3_bucket })
 
       instance = subject.new(id, path)
       instance.clear
@@ -48,16 +48,16 @@ describe Alephant::Cache do
   describe "put(id, data)" do
     it "sets bucket path/id content data" do
       s3_object_collection = double()
-      s3_object_collection.should_receive(:write).with(:data, { :content_type => 'foo/bar', :metadata=>{} })
+      expect(s3_object_collection).to receive(:write).with(:data, { :content_type => 'foo/bar', :metadata=>{} })
 
       s3_bucket = double()
-      s3_bucket.should_receive(:objects).and_return(
+      expect(s3_bucket).to receive(:objects).and_return(
         {
           "path/id" => s3_object_collection
         }
       )
 
-      AWS::S3.any_instance.stub(:buckets).and_return({ id => s3_bucket })
+      expect_any_instance_of(AWS::S3).to receive(:buckets).and_return({ id => s3_bucket })
       instance = subject.new(id, path)
 
       instance.put(id, data, 'foo/bar')
@@ -67,18 +67,18 @@ describe Alephant::Cache do
   describe "get(id)" do
     it "gets bucket path/id content data" do
       s3_object_collection = double()
-      s3_object_collection.should_receive(:read).and_return("content")
-      s3_object_collection.should_receive(:content_type).and_return("foo/bar")
-      s3_object_collection.should_receive(:metadata).and_return({ :foo => :bar})
+      expect(s3_object_collection).to receive(:read).and_return("content")
+      expect(s3_object_collection).to receive(:content_type).and_return("foo/bar")
+      expect(s3_object_collection).to receive(:metadata).and_return({ :foo => :bar})
 
       s3_bucket = double()
-      s3_bucket.should_receive(:objects).and_return(
+      expect(s3_bucket).to receive(:objects).and_return(
         {
           "path/id" => s3_object_collection
         }
       )
 
-      AWS::S3.any_instance.stub(:buckets).and_return({ id => s3_bucket })
+      expect_any_instance_of(AWS::S3).to receive(:buckets).and_return({ id => s3_bucket })
 
       instance = subject.new(id, path)
       object_hash = instance.get(id)
